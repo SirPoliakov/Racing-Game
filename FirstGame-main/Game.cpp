@@ -45,6 +45,10 @@ bool Game::initialize()
 	}
 	myCar = Car(BEGIN_POS, 0.0f, { 25, 13 });
 
+	CONCRETE_TEXT = renderer.loadConcreteText();
+	CAR_TEXT = renderer.loadCarText();
+	TREE_TEXT = renderer.loadTreeText();
+
 	return isWindowInit && isRendererInit; // Return bool && bool && bool ...to detect error
 }
 
@@ -158,15 +162,18 @@ void Game::render()
 
 	for (int i = 0; i < TRACK_ROWS * TRACK_COLS; i++)
 	{
-		if (trackGrid[i]==1)
+		Rectangle rect = { tracks[i].pos.x, tracks[i].pos.y, tracks[i].width /* - TRACK_GAP */, tracks[i].height /* - TRACK_GAP */};
+		if (trackGrid[i] == 0 || trackGrid[i] == 2)
 		{
-			Rectangle rect = { tracks[i].pos.x, tracks[i].pos.y, tracks[i].width - TRACK_GAP, tracks[i].height - TRACK_GAP };
-			renderer.drawImage(rect, renderer.loadConcreteText(), 0);
+			renderer.drawImage(rect, CONCRETE_TEXT, 0);
+		}
+		else
+		{
+			renderer.drawImage(rect, TREE_TEXT, 0);
 		}
 	}
 	
-	myCar.draw(&renderer);
-	
+	myCar.draw(&renderer, CAR_TEXT);
 
 	renderer.endDraw();
 }

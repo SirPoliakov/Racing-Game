@@ -11,9 +11,7 @@ public:
 	Car() : pos({ 60,300 }), velocity(0), carSize({ 0,0}), carAng(-90){}
 	~Car() {}
 
-	SDL_Texture* loadText(Renderer* rend);
-
-	void draw(Renderer* rend);
+	void draw(Renderer* rend, SDL_Texture* myText);
 
 	void update(float nextX, float nextY);
 

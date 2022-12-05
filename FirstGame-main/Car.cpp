@@ -1,19 +1,11 @@
 #include "Car.h"
 #include "Math.h"
 
-SDL_Texture* Car::loadText(Renderer* rend)
-{
-	SDL_Surface* surface = SDL_LoadBMP("rsc/myCar.bmp");
-	SDL_Texture* text = SDL_CreateTextureFromSurface(rend->getRenderer(), surface);
-	SDL_FreeSurface(surface);
 
-	return text;
-}
-
-void Car::draw(Renderer* rend)
+void Car::draw(Renderer* rend, SDL_Texture* myText)
 {
 	Rectangle srcRect = { pos.x - carSize.x/2, pos.y - carSize.y/2, carSize.x, carSize.y };
-	rend->drawImage(srcRect, loadText(rend), carAng);
+	rend->drawImage(srcRect, myText, carAng);
 }
 
 void Car::update(float nextX, float nextY)

@@ -50,9 +50,29 @@ void Renderer::drawRectWhite(Rectangle& rect)
 void Renderer::drawRectRandom(Rectangle& rect, const int r, const int g, const int b)
 {
 	SDL_SetRenderDrawColor(SDLRenderer, r, g, b, 255);
-}
 	SDL_Rect SDLRect = rect.toSDLRect();
 	SDL_RenderFillRect(SDLRenderer, &SDLRect);
+}
+	
+SDL_Texture* Renderer::loadCarText()
+{
+	SDL_Surface* surface = SDL_LoadBMP("rsc/Car.bmp");
+
+	SDL_Texture* text = SDL_CreateTextureFromSurface(getRenderer(), surface);
+	SDL_FreeSurface(surface);
+
+	return text;
+}
+
+SDL_Texture* Renderer::loadTreeText()
+{
+	SDL_Surface* surface = SDL_LoadBMP("rsc/Tree.bmp");
+
+	SDL_Texture* text = SDL_CreateTextureFromSurface(getRenderer(), surface);
+	SDL_FreeSurface(surface);
+
+	return text;
+}
 
 SDL_Texture* Renderer::loadConcreteText()
 {

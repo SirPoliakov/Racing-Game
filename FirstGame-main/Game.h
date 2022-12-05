@@ -50,6 +50,9 @@ public:
 	const int TRACK_COLS = 20;
 	const int TRACK_ROWS = 15;
 
+	SDL_Texture* CONCRETE_TEXT;
+	SDL_Texture* CAR_TEXT;
+	SDL_Texture* TREE_TEXT;
 
 	std::vector<int> trackGrid {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 								1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,

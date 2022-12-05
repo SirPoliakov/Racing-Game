@@ -14,6 +14,8 @@ public:
 	void drawRectWhite(Rectangle& rect);
 	void drawRectRandom(Rectangle& rect, const int r, const int g, const int b);
 	SDL_Texture* loadConcreteText();
+	SDL_Texture* loadCarText();
+	SDL_Texture* loadTreeText();
 	void drawImage(Rectangle& rect, SDL_Texture* text, double ang);
 	void endDraw();
 	SDL_Renderer* getRenderer();
