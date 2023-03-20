@@ -45,11 +45,16 @@ bool Game::initialize()
 	}
 	myCar = Car(BEGIN_POS, 0.0f, { 25, 13 });
 
-	CONCRETE_TEXT = myRenderer.loadConcreteText();
-	CAR_TEXT = myRenderer.loadCarText();
-	TREE_TEXT = myRenderer.loadTreeText();
+	//CONCRETE_TEXT = myRenderer.loadConcreteText();
+	//CAR_TEXT = myRenderer.loadCarText();
+	//TREE_TEXT = myRenderer.loadTreeText();
 
 	return isWindowInit && isRendererInit; // Return bool && bool && bool ...to detect error
+}
+
+void Game::load()
+{
+	Assets::loadShader("Res\\Shaders\\Basic.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
 }
 
 int Game::trackTileToIndex(int col, int row)
@@ -165,15 +170,15 @@ void Game::render()
 		Rectangle rect = { tracks[i].pos.x, tracks[i].pos.y, tracks[i].width /* - TRACK_GAP */, tracks[i].height /* - TRACK_GAP */};
 		if (trackGrid[i] == 0 || trackGrid[i] == 2)
 		{
-			myRenderer.drawImage(rect, CONCRETE_TEXT, 0);
+			//myRenderer.drawImage(rect, CONCRETE_TEXT, 0);
 		}
 		else
 		{
-			myRenderer.drawImage(rect, TREE_TEXT, 0);
+			//myRenderer.drawImage(rect, TREE_TEXT, 0);
 		}
 	}
 	
-	myCar.draw(&myRenderer, CAR_TEXT);
+	//myCar.draw(&myRenderer, CAR_TEXT);
 
 	myRenderer.endDraw();
 }

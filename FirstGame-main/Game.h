@@ -1,9 +1,10 @@
 #pragma once
 #include "Window.h"
 #include "IRenderer.h"
-#include "RendererSDL.h"
+#include "RendererOGL.h"
 #include "Vector2.h"
 #include "Car.h"
+#include "Assets.h"
 #include <vector>
 
 struct Track {
@@ -80,13 +81,14 @@ public:
 
 
 	bool initialize();
+	void load();
 	void loop();
 	void close();
 	void processInput();
 	int trackTileToIndex(int col, int row);
 	bool checkForTrackAtPixelCoord(int pixelX, int pixelY);
 
-	RendererSDL& getRendererSDL() { return myRenderer; }
+	RendererOGL& getRenderer() { return myRenderer; }
 
 private:
 	void update(float dt);
@@ -94,7 +96,7 @@ private:
 
 	bool isRunning;
 	Window window;
-	RendererSDL myRenderer;
+	RendererOGL myRenderer;
 
 };
 

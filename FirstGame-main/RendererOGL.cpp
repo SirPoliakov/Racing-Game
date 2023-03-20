@@ -62,14 +62,28 @@ void RendererOGL::beginDraw()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+/* RendererOGL::loadConcreteText()
+{
+
+}*/
+
+
+/* RendererOGL::loadCarText()
+{
+
+}*/
+
+
+/* RendererOGL::loadTreeText()
+{
+
+}*/
+
 /*void RendererOGL::draw()
 {
 	drawSprites();
 }*/
 
-/*void RendererOGL::drawSprite(const Actor& actor, const Texture& tex, Rectangle srcRect, Vector2 origin, Flip flip) const
-{
-}*/
 
 void RendererOGL::endDraw()
 {
@@ -81,29 +95,3 @@ void RendererOGL::close()
 	SDL_GL_DeleteContext(context);
 	delete vertexArray;
 }
-
-/*void RendererOGL::addSprite(SpriteComponent* sprite)
-{
-	// Insert the sprite at the right place in function of drawOrder
-	int spriteDrawOrder = sprite->getDrawOrder();
-	auto iter = begin(sprites);
-	for (; iter != end(sprites); ++iter)
-	{
-		if (spriteDrawOrder < (*iter)->getDrawOrder()) break;
-	}
-	sprites.insert(iter, sprite);
-}*/
-
-/* void RendererOGL::removeSprite(SpriteComponent* sprite)
-{
-	auto iter = std::find(begin(sprites), end(sprites), sprite);
-	sprites.erase(iter);
-}*/
-
-/*void RendererOGL::drawSprites()
-{
-	for (auto sprite : sprites)
-	{
-		sprite->draw(*this);
-	}
-}*/

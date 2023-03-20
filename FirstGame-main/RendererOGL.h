@@ -15,22 +15,24 @@ public:
 
 	bool initialize(Window& window);
 	void beginDraw();
+
+	// loadConcreteText();
+	// loadCarText();
+	// loadTreeText();
+
 	//void draw();
 	void endDraw();
 
-	//void addSprite(class SpriteComponent* sprite);
-	//void removeSprite(class SpriteComponent* sprite);
-	//void drawSprite(const Actor& actor, const class Texture& tex, Rectangle srcRect, Vector2 origin, Flip flip) const;
+	
 
 	void close();
 	IRenderer::Type type() { return Type::OGL; }
 
 private:
-	//void drawSprites();
 
 	Window* window;
 	VertexArray* vertexArray;
 	SDL_GLContext context;
-	//std::vector<class SpriteComponent*> sprites;
+
 };
 
