@@ -29,26 +29,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -75,8 +75,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\SDL\SDL2-2.0.12\include;..\SDL\SDL2_ttf-2.0.15\include;..\SDL\SDL2_mixer-2.0.4\include;..\SDL\SDL2_image-2.0.5\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\SDL\SDL2-2.0.12\lib\x64;..\SDL\SDL2_ttf-2.0.15\lib\x64;..\SDL\SDL2_image-2.0.5\lib\x64;..\SDL\SDL2_mixer-2.0.4\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\SDL\SDL2-2.0.12\include;..\SDL\SDL2_ttf-2.0.15\include;..\SDL\SDL2_mixer-2.0.4\include;..\SDL\SDL2_image-2.0.5\include;..\SDL\rapidjson\include\rapidjson;..\SDL\glew-2.1.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\SDL\SDL2-2.0.12\lib\x64;..\SDL\SDL2_ttf-2.0.15\lib\x64;..\SDL\SDL2_image-2.0.5\lib\x64;..\SDL\SDL2_mixer-2.0.4\lib\x64;..\SDL\glew-2.1.0\lib\Release\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -146,18 +146,23 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RendererSDL.cpp" />
+    <ClCompile Include="RendererOGL.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Car.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="IRenderer.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Rectangle.h" />
-    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RendererSDL.h" />
+    <ClInclude Include="RendererOGL.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Vector2.h" />
+    <ClInclude Include="VertexArray.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

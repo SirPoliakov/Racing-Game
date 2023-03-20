@@ -2,7 +2,7 @@
 #include "Math.h"
 
 
-void Car::draw(Renderer* rend, SDL_Texture* myText)
+void Car::draw(RendererSDL* rend, SDL_Texture* myText)
 {
 	Rectangle srcRect = { pos.x - carSize.x/2, pos.y - carSize.y/2, carSize.x, carSize.y };
 	rend->drawImage(srcRect, myText, carAng);

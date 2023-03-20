@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector2.h"
-#include "Renderer.h"
+#include "RendererSDL.h"
 #include "Rectangle.h"
 
 
@@ -11,7 +11,7 @@ public:
 	Car() : pos({ 60,300 }), velocity(0), carSize({ 0,0}), carAng(-90){}
 	~Car() {}
 
-	void draw(Renderer* rend, SDL_Texture* myText);
+	void draw(RendererSDL* rend, SDL_Texture* myText);
 
 	void update(float nextX, float nextY);
 

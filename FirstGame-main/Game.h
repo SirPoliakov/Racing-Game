@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
-#include "Renderer.h"
+#include "IRenderer.h"
+#include "RendererSDL.h"
 #include "Vector2.h"
 #include "Car.h"
 #include <vector>
@@ -85,14 +86,15 @@ public:
 	int trackTileToIndex(int col, int row);
 	bool checkForTrackAtPixelCoord(int pixelX, int pixelY);
 
+	RendererSDL& getRendererSDL() { return myRenderer; }
+
 private:
 	void update(float dt);
 	void render();
 
 	bool isRunning;
 	Window window;
-	Renderer renderer;
-
+	RendererSDL myRenderer;
 
 };
 

@@ -10,7 +10,7 @@ using namespace std;
 bool Game::initialize()
 {
 	bool isWindowInit = window.initialize();
-	bool isRendererInit = renderer.initialize(window);
+	bool isRendererInit = myRenderer.initialize(window);
 
 	int windowWidth = window.getWidth();
 	int windowHeight = window.getHeight();
@@ -45,9 +45,9 @@ bool Game::initialize()
 	}
 	myCar = Car(BEGIN_POS, 0.0f, { 25, 13 });
 
-	CONCRETE_TEXT = renderer.loadConcreteText();
-	CAR_TEXT = renderer.loadCarText();
-	TREE_TEXT = renderer.loadTreeText();
+	CONCRETE_TEXT = myRenderer.loadConcreteText();
+	CAR_TEXT = myRenderer.loadCarText();
+	TREE_TEXT = myRenderer.loadTreeText();
 
 	return isWindowInit && isRendererInit; // Return bool && bool && bool ...to detect error
 }
@@ -158,24 +158,24 @@ void Game::update(float dt)
 
 void Game::render()
 {
-	renderer.beginDraw();
+	myRenderer.beginDraw();
 
 	for (int i = 0; i < TRACK_ROWS * TRACK_COLS; i++)
 	{
 		Rectangle rect = { tracks[i].pos.x, tracks[i].pos.y, tracks[i].width /* - TRACK_GAP */, tracks[i].height /* - TRACK_GAP */};
 		if (trackGrid[i] == 0 || trackGrid[i] == 2)
 		{
-			renderer.drawImage(rect, CONCRETE_TEXT, 0);
+			myRenderer.drawImage(rect, CONCRETE_TEXT, 0);
 		}
 		else
 		{
-			renderer.drawImage(rect, TREE_TEXT, 0);
+			myRenderer.drawImage(rect, TREE_TEXT, 0);
 		}
 	}
 	
-	myCar.draw(&renderer, CAR_TEXT);
+	myCar.draw(&myRenderer, CAR_TEXT);
 
-	renderer.endDraw();
+	myRenderer.endDraw();
 }
 
 void Game::loop()
@@ -195,7 +195,7 @@ void Game::loop()
 
 void Game::close()
 {
-	renderer.close();
+	myRenderer.close();
 	window.close();
 	SDL_Quit();
 }

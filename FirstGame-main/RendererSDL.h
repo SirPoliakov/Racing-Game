@@ -1,12 +1,16 @@
 #pragma once
+#include "IRenderer.h"
 #include "Rectangle.h"
 #include <SDL.h>
 #include "Window.h"
 
-class Renderer
+class RendererSDL : public IRenderer
 {
 public:
-	Renderer();
+	RendererSDL();
+	virtual ~RendererSDL();
+
+
 	bool initialize(Window& window);
 
 	void beginDraw();
@@ -18,13 +22,14 @@ public:
 	SDL_Texture* loadTreeText();
 	void drawImage(Rectangle& rect, SDL_Texture* text, double ang);
 	void endDraw();
-	SDL_Renderer* getRenderer();
+	IRenderer::Type type() { return Type::SDL; }
+	SDL_Renderer* getRendererSDL() { return SDLRenderer; }
 
 	void close();
 
 private:
-	SDL_Renderer* SDLRenderer;
+	SDL_Renderer* SDLRenderer = nullptr;
 
-	Renderer(const Renderer&) = delete;
-	Renderer& operator=(const Renderer&) = delete;
+	RendererSDL(const RendererSDL&) = delete;
+	RendererSDL& operator=(const RendererSDL&) = delete;
 };
