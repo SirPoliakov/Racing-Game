@@ -25,3 +25,5 @@ public:
 
 	//virtual void drawSprite(const class Actor&, const class Texture& tex, struct Rectangle srcRect, Vector2 origin, Flip flip) const = 0;
 };
+
+

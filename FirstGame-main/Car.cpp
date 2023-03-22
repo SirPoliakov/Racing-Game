@@ -4,7 +4,7 @@
 
 void Car::draw(RendererSDL* rend, SDL_Texture* myText)
 {
-	Rectangle srcRect = { pos.x - carSize.x/2, pos.y - carSize.y/2, carSize.x, carSize.y };
+	Rectangle srcRect = { pos.x - carScale.x/2, pos.y - carScale.y/2, carScale.x, carScale.y };
 	rend->drawImage(srcRect, myText, carAng);
 }
 
@@ -42,7 +42,7 @@ float Car::getVelo()
 
 Vector2 Car::getCarSize()
 {
-	return carSize;
+	return carScale;
 }
 
 float Car::getCarAng()
@@ -71,10 +71,24 @@ void Car::setP(Vector2 p)
 
 void Car::setCarSize(Vector2 carS)
 {
-	carSize = carS;
+	carScale = carS;
 }
 
 void Car::setCarAng(float a)
 {
 	carAng = a;
+}
+
+void Car::computeWorldTransform()
+{
+	if (mustRecomputeWorldTransform == true)
+	{
+		mustRecomputeWorldTransform == false;
+		const Vector3 scale(carScale.x, carScale.y, 0.0f);
+		worldTransform = Matrix4::createScale(scale);
+		worldTransform *= Matrix4::createRotationZ(carAng);
+		worldTransform *= Matrix4::createTranslation(Vector3(pos.x, pos.y, 0.0f));
+
+	}
+
 }

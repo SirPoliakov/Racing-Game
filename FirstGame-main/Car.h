@@ -3,13 +3,14 @@
 #include "RendererSDL.h"
 #include "Rectangle.h"
 #include "Matrix4.h"
+#include "Vector3.h"
 
 
 class Car
 {
 public:
-	Car(Vector2 p, float v, Vector2 carS) : pos(p), velocity(v), carSize(carS), carAng(-90){}
-	Car() : pos({ 60,300 }), velocity(0), carSize({ 0,0}), carAng(-90){}
+	Car(Vector2 p, float v, Vector2 carS) : pos(p), velocity(v), carScale(carS), carAng(-90){}
+	Car() : pos({ 60,300 }), velocity(0), carScale({ 0,0}), carAng(-90){}
 	~Car() {}
 
 	void draw(RendererSDL* rend, SDL_Texture* myText);
@@ -51,8 +52,8 @@ private:
 
 	Vector2 pos;
 	float velocity;
-	Vector2 carSize;
+	Vector2 carScale;
 	float carAng;
 	Matrix4 worldTransform;
-	bool mustRecomputeTransform;
+	bool mustRecomputeWorldTransform;
 };
