@@ -2,6 +2,7 @@
 #include "Vector2.h"
 #include "RendererSDL.h"
 #include "Rectangle.h"
+#include "Matrix4.h"
 
 
 class Car
@@ -40,12 +41,18 @@ public:
 	void setCarAng(float a);
 	
 	void setCarSize(Vector2 carS);
+
+	void computeWorldTransform(); //Voir Page 17/54 
+
+	const Matrix4& getWorldTransform() const { return worldTransform; }
 	
 
 private:
+
 	Vector2 pos;
 	float velocity;
 	Vector2 carSize;
 	float carAng;
-
+	Matrix4 worldTransform;
+	bool mustRecomputeTransform;
 };

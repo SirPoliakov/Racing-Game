@@ -44,9 +44,9 @@ Shader& Assets::getShader(const std::string& name)
 void Assets::clear() 
 {
     // (Properly) delete all textures
-    for (auto iter : textures)
+    /*for (auto iter : textures)
         iter.second.unload();
-    textures.clear();
+    textures.clear();*/
     // (Properly) delete all shaders
     for (auto iter : shaders)
         iter.second.unload();
