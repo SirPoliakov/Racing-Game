@@ -2,6 +2,7 @@
 #include "IRenderer.h"
 #include "VertexArray.h"
 #include "Vector2.h"
+#include "Matrix4.h"
 #include "Shader.h"
 
 #include <vector>
@@ -28,6 +29,7 @@ public:
 
 	void close();
 	IRenderer::Type type() { return Type::OGL; }
+	void drawSprite(const Matrix4 wrldTrans, const Texture& tex, Rectangle srcRect, Vector2 origin, Flip flip) const;
 
 private:
 

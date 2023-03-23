@@ -89,6 +89,15 @@ void RendererOGL::beginDraw()
 	drawSprites();
 }*/
 
+void RendererOGL::drawSprite(const Matrix4 wrldTrans, const Texture& tex, Rectangle srcRect, Vector2 origin, Flip flip) const
+{
+	Matrix4 scaleMat = Matrix4::createScale((float)tex.getWidth(), (float)tex.getHeight(), 1.0f);
+	Matrix4 world = scaleMat * wrldTrans;
+	Matrix4 pixelTranslation = Matrix4::createTranslation(Vector3(-WINDOW_WIDTH / 2 - origin.x, -WINDOW_HEIGHT / 2 - origin.y, 0.0f)); // Screen pixel coordinates
+	shader->setMatrix4("uWorldTransform", world * pixelTranslation);
+	tex.setActive();
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+}
 
 void RendererOGL::endDraw()
 {

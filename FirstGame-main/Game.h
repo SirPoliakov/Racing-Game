@@ -79,6 +79,10 @@ public:
 	Car myCar;
 	std::vector<Track> tracks;
 
+	
+
+	Matrix4 carWorldTransform;
+	bool mustRecomputeCarWorldTransform;
 
 	bool initialize();
 	void load();
@@ -88,11 +92,15 @@ public:
 	int trackTileToIndex(int col, int row);
 	bool checkForTrackAtPixelCoord(int pixelX, int pixelY);
 
+	void computeCarWorldTransform(); //Voir Page 17/54 
+
 	RendererOGL& getRenderer() { return myRenderer; }
 
 private:
 	void update(float dt);
 	void render();
+	
+	
 
 	bool isRunning;
 	Window window;

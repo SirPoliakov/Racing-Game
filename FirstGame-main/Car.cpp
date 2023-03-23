@@ -2,10 +2,10 @@
 #include "Math.h"
 
 
-void Car::draw(RendererSDL* rend, SDL_Texture* myText)
+void Car::draw(RendererOGL* rend, OGL_Texture* myText, const Matrix4 wtMat)
 {
 	Rectangle srcRect = { pos.x - carScale.x/2, pos.y - carScale.y/2, carScale.x, carScale.y };
-	rend->drawImage(srcRect, myText, carAng);
+	rend->draw(srcRect, myText, wtMat);
 }
 
 void Car::update(float nextX, float nextY)
@@ -40,7 +40,7 @@ float Car::getVelo()
 	return velocity;
 }
 
-Vector2 Car::getCarSize()
+Vector2 Car::getCarScale()
 {
 	return carScale;
 }
@@ -69,7 +69,7 @@ void Car::setP(Vector2 p)
 	pos = p;
 }
 
-void Car::setCarSize(Vector2 carS)
+void Car::setCarScale(Vector2 carS)
 {
 	carScale = carS;
 }
@@ -77,18 +77,4 @@ void Car::setCarSize(Vector2 carS)
 void Car::setCarAng(float a)
 {
 	carAng = a;
-}
-
-void Car::computeWorldTransform()
-{
-	if (mustRecomputeWorldTransform == true)
-	{
-		mustRecomputeWorldTransform == false;
-		const Vector3 scale(carScale.x, carScale.y, 0.0f);
-		worldTransform = Matrix4::createScale(scale);
-		worldTransform *= Matrix4::createRotationZ(carAng);
-		worldTransform *= Matrix4::createTranslation(Vector3(pos.x, pos.y, 0.0f));
-
-	}
-
 }

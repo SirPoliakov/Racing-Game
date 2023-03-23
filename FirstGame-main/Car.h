@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector2.h"
-#include "RendererSDL.h"
+#include "RendererOGL.h"
 #include "Rectangle.h"
 #include "Matrix4.h"
 #include "Vector3.h"
@@ -13,7 +13,7 @@ public:
 	Car() : pos({ 60,300 }), velocity(0), carScale({ 0,0}), carAng(-90){}
 	~Car() {}
 
-	void draw(RendererSDL* rend, SDL_Texture* myText);
+	void draw(RendererOGL* rend, OGL_Texture* myText, const Matrix4 wtMat); //OGL_Texture n'existe pas. Trouver un moyen de charger la texture avec OpenGL
 
 	void update(float nextX, float nextY);
 
@@ -27,7 +27,7 @@ public:
 	
 	float getVelo();
 
-	Vector2 getCarSize();
+	Vector2 getCarScale();
 
 	float getCarAng();
 
@@ -41,12 +41,7 @@ public:
 
 	void setCarAng(float a);
 	
-	void setCarSize(Vector2 carS);
-
-	void computeWorldTransform(); //Voir Page 17/54 
-
-	const Matrix4& getWorldTransform() const { return worldTransform; }
-	
+	void setCarScale(Vector2 carS);
 
 private:
 
@@ -54,6 +49,4 @@ private:
 	float velocity;
 	Vector2 carScale;
 	float carAng;
-	Matrix4 worldTransform;
-	bool mustRecomputeWorldTransform;
 };

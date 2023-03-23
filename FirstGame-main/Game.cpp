@@ -154,12 +154,23 @@ void Game::update(float dt)
 	{
 		myCar.setV(0);
 	}
-	// Car - rect collision
-	
 
-	// Restart automatically
-	
+	computeCarWorldTransform();
+
 }
+
+void Game::computeCarWorldTransform()
+{
+	if (mustRecomputeCarWorldTransform == true)
+	{
+		mustRecomputeCarWorldTransform == false;
+		const Vector3 scale(myCar.getCarScale().x, myCar.getCarScale().y, 0.0f);
+		carWorldTransform = Matrix4::createScale(scale);
+		carWorldTransform *= Matrix4::createRotationZ(myCar.getCarAng());
+		carWorldTransform *= Matrix4::createTranslation(Vector3(myCar.getPos().x, myCar.getPos().y, 0.0f));
+	}
+}
+
 
 void Game::render()
 {
