@@ -6,7 +6,7 @@
 #include <SDL_image.h>
 #include "Assets.h"
 
-RendererOGL::RendererOGL() : window(nullptr), vertexArray(nullptr), context(nullptr), shader(nullptr)
+RendererOGL::RendererOGL() : window(nullptr), vertexArray(nullptr), context(nullptr), shader(nullptr), viewProj(Matrix4::createSimpleViewProj(WINDOW_WIDTH,WINDOW_HEIGHT))
 {
 }
 
@@ -50,7 +50,7 @@ bool RendererOGL::initialize(Window& windowP)
 	}
 
 	vertexArray = new VertexArray(vertices, 4, indices, 6);
-	shader = &Assets::getShader("Basic");
+	shader = &Assets::getShader("Transform");
     return true;
 }
 
@@ -64,6 +64,7 @@ void RendererOGL::beginDraw()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// Active shader and vertex array
 	shader->use();
+	shader->setMatrix4("viewProj", viewProj);
 	vertexArray->setActive();
 }
 

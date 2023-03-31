@@ -13,7 +13,7 @@ public:
 	Car() : pos({ 60,300 }), velocity(0), carScale({ 0,0}), carAng(-90){}
 	~Car() {}
 
-	void draw(RendererOGL* rend, OGL_Texture* myText, const Matrix4 wtMat); //OGL_Texture n'existe pas. Trouver un moyen de charger la texture avec OpenGL
+	void draw(RendererOGL* rend, Texture* myText, const Matrix4 wtMat); 
 
 	void update(float nextX, float nextY);
 

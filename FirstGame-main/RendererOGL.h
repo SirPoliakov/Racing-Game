@@ -4,6 +4,7 @@
 #include "Vector2.h"
 #include "Matrix4.h"
 #include "Shader.h"
+#include "Texture.h"
 
 #include <vector>
 
@@ -37,6 +38,7 @@ private:
 	Window* window;
 	VertexArray* vertexArray;
 	SDL_GLContext context;
+	Matrix4 viewProj;
 
 };
 

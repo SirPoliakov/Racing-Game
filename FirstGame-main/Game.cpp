@@ -55,6 +55,7 @@ bool Game::initialize()
 void Game::load()
 {
 	Assets::loadShader("Res\\Shaders\\Basic.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
+	Assets::loadShader("Res\\Shaders\\Transform.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
 }
 
 int Game::trackTileToIndex(int col, int row)

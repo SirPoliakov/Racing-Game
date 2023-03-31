@@ -1,11 +1,11 @@
 #include "Car.h"
 #include "Math.h"
+#include "Texture.h"
 
-
-void Car::draw(RendererOGL* rend, OGL_Texture* myText, const Matrix4 wtMat)
+void Car::draw(RendererOGL* rend, Texture* myText, const Matrix4 wtMat)
 {
 	Rectangle srcRect = { pos.x - carScale.x/2, pos.y - carScale.y/2, carScale.x, carScale.y };
-	rend->draw(srcRect, myText, wtMat);
+	rend->drawSprite(srcRect, myText, wtMat);
 }
 
 void Car::update(float nextX, float nextY)
