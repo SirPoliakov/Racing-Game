@@ -45,17 +45,28 @@ bool Game::initialize()
 	}
 	myCar = Car(BEGIN_POS, 0.0f, { 25, 13 });
 
-	//CONCRETE_TEXT = myRenderer.loadConcreteText();
-	//CAR_TEXT = myRenderer.loadCarText();
-	//TREE_TEXT = myRenderer.loadTreeText();
+	
+	
 
 	return isWindowInit && isRendererInit; // Return bool && bool && bool ...to detect error
 }
 
 void Game::load()
 {
+	// loading assets textures
+
+	Assets::loadTexture(myRenderer, "rsc/Car.bmp", "Car");
+	Assets::loadTexture(myRenderer, "rsc/Concrete.bmp", "Concrete");
+	Assets::loadTexture(myRenderer, "rsc/Tree.bmp", "Tree");
+
+	// loading assets shaders
+
 	Assets::loadShader("Res\\Shaders\\Basic.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
 	Assets::loadShader("Res\\Shaders\\Transform.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
+	
+	CAR_TEXT = &Assets::getTexture("Car");
+	CONCRETE_TEXT = &Assets::getTexture("Concrete");
+	TREE_TEXT = &Assets::getTexture("Tree");
 }
 
 int Game::trackTileToIndex(int col, int row)
@@ -158,6 +169,8 @@ void Game::update(float dt)
 
 	computeCarWorldTransform();
 
+
+
 }
 
 void Game::computeCarWorldTransform()
@@ -172,6 +185,11 @@ void Game::computeCarWorldTransform()
 	}
 }
 
+void Game::computeStaticWorldTransform(Vector2& coord)
+{
+	staticWorldTransform *= Matrix4::createTranslation(Vector3(coord.x, coord.y, 0.0f));
+}
+
 
 void Game::render()
 {
@@ -182,7 +200,7 @@ void Game::render()
 		Rectangle rect = { tracks[i].pos.x, tracks[i].pos.y, tracks[i].width /* - TRACK_GAP */, tracks[i].height /* - TRACK_GAP */};
 		if (trackGrid[i] == 0 || trackGrid[i] == 2)
 		{
-			//myRenderer.drawImage(rect, CONCRETE_TEXT, 0);
+			myRenderer.drawSprite(rect, CONCRETE_TEXT, 0);
 		}
 		else
 		{
@@ -190,7 +208,7 @@ void Game::render()
 		}
 	}
 	
-	//myCar.draw(&myRenderer, CAR_TEXT);
+	myCar.draw(&myRenderer, CAR_TEXT);
 
 	myRenderer.endDraw();
 }

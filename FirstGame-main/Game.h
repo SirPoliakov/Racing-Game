@@ -1,4 +1,5 @@
 #pragma once
+#include <utility>
 #include "Window.h"
 #include "IRenderer.h"
 #include "RendererOGL.h"
@@ -52,9 +53,18 @@ public:
 	const int TRACK_COLS = 20;
 	const int TRACK_ROWS = 15;
 
-	SDL_Texture* CONCRETE_TEXT;
-	SDL_Texture* CAR_TEXT;
-	SDL_Texture* TREE_TEXT;
+	Texture* CONCRETE_TEXT = 0;
+	Texture* CAR_TEXT = 0;
+	Texture* TREE_TEXT = 0;
+	Car myCar;
+	
+
+	float tileRow, tileCol;
+
+	Vector2 BEGIN_POS;
+
+	
+	std::vector<Track> tracks;
 
 	std::vector<int> trackGrid {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 								1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
@@ -72,16 +82,13 @@ public:
 								1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1,
 								1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
-	float tileRow, tileCol;
-
-	Vector2 BEGIN_POS;
-
-	Car myCar;
-	std::vector<Track> tracks;
+	
 
 	
 
 	Matrix4 carWorldTransform;
+	float x = static_cast<float>(TRACK_H);
+	Matrix4 staticWorldTransform = Matrix4::createScale(const Vector3{ x, x, 0.0f });;
 	bool mustRecomputeCarWorldTransform;
 
 	bool initialize();
@@ -92,15 +99,14 @@ public:
 	int trackTileToIndex(int col, int row);
 	bool checkForTrackAtPixelCoord(int pixelX, int pixelY);
 
-	void computeCarWorldTransform(); //Voir Page 17/54 
+	void computeCarWorldTransform();
+	void computeStaticWorldTransform(Vector2& coord);
 
 	RendererOGL& getRenderer() { return myRenderer; }
 
 private:
 	void update(float dt);
 	void render();
-	
-	
 
 	bool isRunning;
 	Window window;

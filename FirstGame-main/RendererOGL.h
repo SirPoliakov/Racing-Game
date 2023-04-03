@@ -5,6 +5,7 @@
 #include "Matrix4.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Rectangle.h"
 
 #include <vector>
 
@@ -30,7 +31,7 @@ public:
 
 	void close();
 	IRenderer::Type type() { return Type::OGL; }
-	void drawSprite(const Matrix4 wrldTrans, const Texture& tex, Rectangle srcRect, Vector2 origin, Flip flip) const;
+	void drawSprite(const Matrix4 wrldTrans, const Texture& tex, Rectangle srcRect, Vector2 origin) const;
 
 private:
 

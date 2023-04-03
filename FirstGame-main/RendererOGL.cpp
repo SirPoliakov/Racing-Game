@@ -74,7 +74,7 @@ void RendererOGL::beginDraw()
 }*/
 
 
-/* RendererOGL::loadCarText()
+ /*RendererOGL::loadCarText()
 {
 
 }*/
@@ -90,7 +90,7 @@ void RendererOGL::beginDraw()
 	drawSprites();
 }*/
 
-void RendererOGL::drawSprite(const Matrix4 wrldTrans, const Texture& tex, Rectangle srcRect, Vector2 origin, Flip flip) const
+void RendererOGL::drawSprite(const Matrix4 wrldTrans, const Texture& tex, Rectangle srcRect, Vector2 origin) const
 {
 	Matrix4 scaleMat = Matrix4::createScale((float)tex.getWidth(), (float)tex.getHeight(), 1.0f);
 	Matrix4 world = scaleMat * wrldTrans;

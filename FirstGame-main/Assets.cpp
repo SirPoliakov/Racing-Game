@@ -4,16 +4,16 @@
 #include <fstream>
 #include "Log.h"
 
-//std::map<std::string, Texture> Assets::textures;
+std::map<std::string, Texture> Assets::textures;
 std::map<std::string, Shader> Assets::shaders;
 
-/*Texture Assets::loadTexture(IRenderer& renderer, const string& filename, const string& name)
+Texture Assets::loadTexture(IRenderer& renderer, const string& filename, const string& name)
 {
     textures[name] = loadTextureFromFile(renderer, filename.c_str());
     return textures[name];
-}*/
+}
 
-/*Texture& Assets::getTexture(const string& name)
+Texture& Assets::getTexture(const string& name)
 {
     if (textures.find(name) == end(textures))
     {
@@ -22,7 +22,7 @@ std::map<std::string, Shader> Assets::shaders;
         Log::error(LogCategory::Application, loadError.str());
     }
     return textures[name];
-}*/
+}
 
 Shader Assets::loadShader(const std::string& vShaderFile, const std::string& fShaderFile, const std::string& tcShaderFile, const std::string& teShaderFile, const std::string& gShaderFile, const std::string& name)
 {
@@ -44,25 +44,22 @@ Shader& Assets::getShader(const std::string& name)
 void Assets::clear() 
 {
     // (Properly) delete all textures
-    /*for (auto iter : textures)
+    for (auto iter : textures)
         iter.second.unload();
-    textures.clear();*/
+    textures.clear();
     // (Properly) delete all shaders
     for (auto iter : shaders)
         iter.second.unload();
     shaders.clear();
 }
 
-/*Texture Assets::loadTextureFromFile(IRenderer& renderer, const string& filename)
+Texture Assets::loadTextureFromFile(IRenderer& renderer, const string& filename)
 {
     Texture texture;
-    // Not very elegant, but simpler architecture
-    if (renderer.type() == IRenderer::Type::SDL)
-    {
-        texture.loadSDL(dynamic_cast<RendererSDL&>(renderer), filename);
-    }
+    texture.loadOGL(filename);
+
     return texture;
-}*/
+}
 
 Shader Assets::loadShaderFromFile(const std::string& vShaderFile, const std::string& fShaderFile, const std::string& tcShaderFile, const std::string& teShaderFile, const std::string& gShaderFile)
 {
