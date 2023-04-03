@@ -88,7 +88,7 @@ public:
 
 	Matrix4 carWorldTransform;
 	float x = static_cast<float>(TRACK_H);
-	Matrix4 staticWorldTransform = Matrix4::createScale(const Vector3{ x, x, 0.0f });;
+	Matrix4 staticWorldTransform = Matrix4::createScale(Vector3{ x, x, 0.0f } );;
 	bool mustRecomputeCarWorldTransform;
 
 	bool initialize();

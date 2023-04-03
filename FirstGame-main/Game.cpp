@@ -63,7 +63,9 @@ void Game::load()
 
 	Assets::loadShader("Res\\Shaders\\Basic.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
 	Assets::loadShader("Res\\Shaders\\Transform.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
-	
+	Assets::loadShader("Res\\Shaders\\Sprite.vert", "Res\\Shaders\\Sprite.frag", "", "", "", "Sprite");
+
+
 	CAR_TEXT = &Assets::getTexture("Car");
 	CONCRETE_TEXT = &Assets::getTexture("Concrete");
 	TREE_TEXT = &Assets::getTexture("Tree");
@@ -197,18 +199,20 @@ void Game::render()
 
 	for (int i = 0; i < TRACK_ROWS * TRACK_COLS; i++)
 	{
-		Rectangle rect = { tracks[i].pos.x, tracks[i].pos.y, tracks[i].width /* - TRACK_GAP */, tracks[i].height /* - TRACK_GAP */};
+		float posX = tracks[i].pos.x; float posY = tracks[i].pos.y; Vector2 vecXY = { posX, posY }; Vector2 ori = { static_cast<float>(CONCRETE_TEXT->getWidth()) / 2, static_cast<float>(CONCRETE_TEXT->getHeight()) / 2 };
+		Rectangle rect = { posX, posY, tracks[i].width /* - TRACK_GAP */, tracks[i].height /* - TRACK_GAP */};
+		computeStaticWorldTransform(vecXY);
 		if (trackGrid[i] == 0 || trackGrid[i] == 2)
 		{
-			myRenderer.drawSprite(rect, CONCRETE_TEXT, 0);
+			myRenderer.drawSprite(staticWorldTransform, *CONCRETE_TEXT, rect, ori);
 		}
 		else
 		{
-			//myRenderer.drawImage(rect, TREE_TEXT, 0);
+			myRenderer.drawSprite(staticWorldTransform, *TREE_TEXT, rect, ori);
 		}
 	}
 	
-	myCar.draw(&myRenderer, CAR_TEXT);
+	myCar.draw(&myRenderer, CAR_TEXT, carWorldTransform);
 
 	myRenderer.endDraw();
 }

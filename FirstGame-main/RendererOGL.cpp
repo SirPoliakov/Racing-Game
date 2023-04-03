@@ -50,7 +50,7 @@ bool RendererOGL::initialize(Window& windowP)
 	}
 
 	vertexArray = new VertexArray(vertices, 4, indices, 6);
-	shader = &Assets::getShader("Transform");
+	shader = &Assets::getShader("Sprite");
     return true;
 }
 
@@ -66,6 +66,7 @@ void RendererOGL::beginDraw()
 	shader->use();
 	shader->setMatrix4("viewProj", viewProj);
 	vertexArray->setActive();
+	
 }
 
 /* RendererOGL::loadConcreteText()

@@ -1,0 +1,15 @@
+								ERRORS:
+
+
+
+- Error C4430: missing type specifier - int assumed. Note: C++ does not support default-int  :
+
+Dans RendererOGL.h
+
+	L.22  --> void drawSprite( const Matrix4 wrldTrans, const Texture& tex, Rectangle srcRect, Vector2 origin ) const
+								    ________
+								       ^
+								       |
+								       |
+
+

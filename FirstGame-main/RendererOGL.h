@@ -19,19 +19,12 @@ public:
 
 	bool initialize(Window& window);
 	void beginDraw();
-
-	// loadConcreteText();
-	// loadCarText();
-	// loadTreeText();
-
-	//void draw();
+	void drawSprite(const Matrix4 wrldTrans, const Texture& tex, Rectangle srcRect, Vector2 origin) const;
 	void endDraw();
-
-	
 
 	void close();
 	IRenderer::Type type() { return Type::OGL; }
-	void drawSprite(const Matrix4 wrldTrans, const Texture& tex, Rectangle srcRect, Vector2 origin) const;
+	
 
 private:
 
