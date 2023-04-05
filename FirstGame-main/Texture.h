@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-//#include "RendererSDL.h"
+#include "RendererSDL.h"
 #include "RendererOGL.h"
 using std::string;
 
