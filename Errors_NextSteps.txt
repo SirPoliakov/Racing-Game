@@ -10,6 +10,10 @@ Dans RendererOGL.h
 								    ________
 								       ^
 								       |
-								       |
+								       
+FIXED! Un include bouclait ce qui fait cracher le compilateur
 
+-------------------------------------------------------------------------------------------------------------------------------
 
+Probleme: aucune texture/couleur et un seul couple de triangle est affiché. 
+Piste : Touver le moyen d'envoyer plusieurs vertices au shader pour chaque case de la grille

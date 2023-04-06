@@ -2,6 +2,7 @@
 #include "Log.h"
 #include <SDL_image.h>
 #include <sstream>
+#include "RendererOGL.h"
 
 Texture::Texture(): textureID(0), filename(""), width(0), height(0), SDLTexture(nullptr)
 {

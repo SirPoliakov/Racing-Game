@@ -3,6 +3,7 @@
 #include <string>
 #include "Texture.h"
 #include "Shader.h"
+#include "IRenderer.h"
 using std::map;
 using std::string;
 

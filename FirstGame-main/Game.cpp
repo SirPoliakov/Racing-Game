@@ -36,8 +36,8 @@ bool Game::initialize()
 	{
 		if (trackGrid[i] == 2)
 		{
-			tileRow = floor(i / TRACK_COLS);
-			tileCol = i % TRACK_COLS;
+			tileRow = floor((float)i / TRACK_COLS);
+			tileCol = (float) (i % TRACK_COLS);
 			BEGIN_POS = {tileCol*40,tileRow*40};
 			break;
 		}
@@ -59,12 +59,6 @@ void Game::load()
 	Assets::loadTexture(myRenderer, "rsc/Concrete.bmp", "Concrete");
 	Assets::loadTexture(myRenderer, "rsc/Tree.bmp", "Tree");
 
-	// loading assets shaders
-
-	Assets::loadShader("Res\\Shaders\\Basic.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
-	Assets::loadShader("Res\\Shaders\\Transform.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
-	Assets::loadShader("Res\\Shaders\\Sprite.vert", "Res\\Shaders\\Sprite.frag", "", "", "", "Sprite");
-
 
 	CAR_TEXT = &Assets::getTexture("Car");
 	CONCRETE_TEXT = &Assets::getTexture("Concrete");
@@ -77,8 +71,8 @@ int Game::trackTileToIndex(int col, int row)
 }
 
 bool Game::checkForTrackAtPixelCoord(int pixelX, int pixelY) {
-	float tileCol = pixelX / TRACK_W;
-	float tileRow = pixelY / TRACK_H;
+	float tileCol = (float)pixelX / TRACK_W;
+	float tileRow = (float)pixelY / TRACK_H;
 	// we'll use Math.floor to round down to the nearest whole number
 	tileCol = floor(tileCol);
 	tileRow = floor(tileRow);
@@ -87,7 +81,7 @@ bool Game::checkForTrackAtPixelCoord(int pixelX, int pixelY) {
 		tileRow < 0 || tileRow >= TRACK_ROWS) {
 		return false; // bail out of function to avoid illegal array position usage
 	}
-	int trackIndex = trackTileToIndex(tileCol, tileRow);
+	int trackIndex = trackTileToIndex((int)tileCol, (int)tileRow);
 	return (trackGrid[trackIndex] == 0);
 }
 
@@ -157,12 +151,15 @@ void Game::update(float dt)
 	
 
 	// Car move
-	float nextCarX = myCar.getPos().x + cos(myCar.getCarAng() * M_PI / 180) * myCar.getVelo()*dt;
-	float nextCarY = myCar.getPos().y + sin(myCar.getCarAng()* M_PI / 180) * myCar.getVelo()*dt;
+	double nextCarX = myCar.getPos().x + cos(myCar.getCarAng() * M_PI / 180) * myCar.getVelo()*dt;
+	double nextCarY = myCar.getPos().y + sin(myCar.getCarAng()* M_PI / 180) * myCar.getVelo()*dt;
 
-	if (checkForTrackAtPixelCoord(nextCarX, nextCarY))
+	int nextCX = (int) floor(nextCarX);
+	int nextCY = (int) floor(nextCarY);
+
+	if (checkForTrackAtPixelCoord(nextCX, nextCY))
 	{
-		myCar.update(nextCarX, nextCarY);
+		myCar.update((float)nextCarX, (float)nextCarY);
 	}
 	else
 	{
@@ -179,7 +176,7 @@ void Game::computeCarWorldTransform()
 {
 	if (mustRecomputeCarWorldTransform == true)
 	{
-		mustRecomputeCarWorldTransform == false;
+		mustRecomputeCarWorldTransform = false;
 		const Vector3 scale(myCar.getCarScale().x, myCar.getCarScale().y, 0.0f);
 		carWorldTransform = Matrix4::createScale(scale);
 		carWorldTransform *= Matrix4::createRotationZ(myCar.getCarAng());
@@ -189,6 +186,8 @@ void Game::computeCarWorldTransform()
 
 void Game::computeStaticWorldTransform(Vector2& coord)
 {
+	const Vector3 scale(TRACK_H, TRACK_W, 0.0f);
+	staticWorldTransform = Matrix4::createScale(scale);
 	staticWorldTransform *= Matrix4::createTranslation(Vector3(coord.x, coord.y, 0.0f));
 }
 
@@ -199,8 +198,8 @@ void Game::render()
 
 	for (int i = 0; i < TRACK_ROWS * TRACK_COLS; i++)
 	{
-		float posX = tracks[i].pos.x; float posY = tracks[i].pos.y; Vector2 vecXY = { posX, posY }; Vector2 ori = { static_cast<float>(CONCRETE_TEXT->getWidth()) / 2, static_cast<float>(CONCRETE_TEXT->getHeight()) / 2 };
-		Rectangle rect = { posX, posY, tracks[i].width /* - TRACK_GAP */, tracks[i].height /* - TRACK_GAP */};
+		float posX = tracks[i].pos.x; float posY = tracks[i].pos.y; Vector2 vecXY = { posX, posY }; Vector2 ori = { (float)(CONCRETE_TEXT->getWidth()) / 2,(float)(CONCRETE_TEXT->getHeight()) / 2 };
+		Rectangle rect = { posX, posY, (float)tracks[i].width /* - TRACK_GAP */, (float)tracks[i].height /* - TRACK_GAP */};
 		computeStaticWorldTransform(vecXY);
 		if (trackGrid[i] == 0 || trackGrid[i] == 2)
 		{
@@ -224,7 +223,7 @@ void Game::loop()
 	while (isRunning)
 	{
 		float dt = timer.computeDeltaTime() / 1000.0f;
-		cout << "dt = " << dt << endl;
+		//cout << "dt = " << dt << endl;
 		processInput();
 		update(dt);
 		render();

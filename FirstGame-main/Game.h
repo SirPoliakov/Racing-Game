@@ -43,7 +43,7 @@ public:
 	Game& operator=(Game&&) = delete;
 
 private:
-	Game(): isRunning(true){}
+	Game(): isRunning(true), mustRecomputeCarWorldTransform(true), tileCol(0),tileRow(0) {}
 
 public:
 
@@ -87,8 +87,7 @@ public:
 	
 
 	Matrix4 carWorldTransform;
-	float x = static_cast<float>(TRACK_H);
-	Matrix4 staticWorldTransform = Matrix4::createScale(Vector3{ x, x, 0.0f } );;
+	Matrix4 staticWorldTransform;
 	bool mustRecomputeCarWorldTransform;
 
 	bool initialize();
