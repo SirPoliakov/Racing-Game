@@ -199,15 +199,15 @@ void Game::render()
 	for (int i = 0; i < TRACK_ROWS * TRACK_COLS; i++)
 	{
 		float posX = tracks[i].pos.x; float posY = tracks[i].pos.y; Vector2 vecXY = { posX, posY }; Vector2 ori = { (float)(CONCRETE_TEXT->getWidth()) / 2,(float)(CONCRETE_TEXT->getHeight()) / 2 };
-		Rectangle rect = { posX, posY, (float)tracks[i].width /* - TRACK_GAP */, (float)tracks[i].height /* - TRACK_GAP */};
+		//Rectangle rect = { posX, posY, (float)tracks[i].width /* - TRACK_GAP */, (float)tracks[i].height /* - TRACK_GAP */};
 		computeStaticWorldTransform(vecXY);
 		if (trackGrid[i] == 0 || trackGrid[i] == 2)
 		{
-			myRenderer.drawSprite(staticWorldTransform, *CONCRETE_TEXT, rect, ori);
+			myRenderer.drawSprite(staticWorldTransform, *CONCRETE_TEXT, ori);
 		}
 		else
 		{
-			myRenderer.drawSprite(staticWorldTransform, *TREE_TEXT, rect, ori);
+			myRenderer.drawSprite(staticWorldTransform, *TREE_TEXT, ori);
 		}
 	}
 	

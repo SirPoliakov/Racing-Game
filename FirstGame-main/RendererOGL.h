@@ -19,7 +19,7 @@ public:
 
 	bool initialize(Window& window);
 	void beginDraw();
-	void drawSprite(const Matrix4 wrldTrans, const Texture& tex, Rectangle srcRect, Vector2 origin) const;
+	void drawSprite(const Matrix4 wrldTrans, const Texture& tex, Vector2 origin) const;
 	void endDraw();
 
 	void close();

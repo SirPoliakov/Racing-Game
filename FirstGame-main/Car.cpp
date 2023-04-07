@@ -5,7 +5,7 @@
 void Car::draw(RendererOGL* rend, Texture* myText, const Matrix4 wtMat)
 {
 	Rectangle srcRect = { pos.x - carScale.x/2, pos.y - carScale.y/2, carScale.x, carScale.y };
-	rend->drawSprite(wtMat, *myText, srcRect, Vector2{ pos.x , pos.y });
+	rend->drawSprite(wtMat, *myText, Vector2{ pos.x , pos.y });
 }
 
 void Car::update(float nextX, float nextY)
