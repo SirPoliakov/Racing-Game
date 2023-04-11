@@ -49,8 +49,8 @@ bool RendererOGL::initialize(Window& windowP)
 		return false;
 	}
 
-	Assets::loadShader("Res\\Shaders\\Basic.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
-	Assets::loadShader("Res\\Shaders\\Transform.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
+	// Assets::loadShader("Res\\Shaders\\Basic.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
+	// Assets::loadShader("Res\\Shaders\\Transform.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
 	Assets::loadShader("Res\\Shaders\\Sprite.vert", "Res\\Shaders\\Sprite.frag", "", "", "", "Sprite");
 
 	vertexArray = new VertexArray(vertices, 4, indices, 6);
@@ -67,7 +67,8 @@ void RendererOGL::beginDraw()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// Active shader and vertex array
-	shader->use();
+	// shader->use();
+	Assets::getShader("Sprite").use();
 	shader->setMatrix4("viewProj", viewProj);
 	vertexArray->setActive();
 	

@@ -203,11 +203,11 @@ void Game::render()
 		computeStaticWorldTransform(vecXY);
 		if (trackGrid[i] == 0 || trackGrid[i] == 2)
 		{
-			myRenderer.drawSprite(staticWorldTransform, *CONCRETE_TEXT, ori);
+			myRenderer.drawSprite(staticWorldTransform, Assets::getTexture("Concrete"), ori);
 		}
 		else
 		{
-			myRenderer.drawSprite(staticWorldTransform, *TREE_TEXT, ori);
+			myRenderer.drawSprite(staticWorldTransform, Assets::getTexture("Tree"), ori);
 		}
 	}
 	
