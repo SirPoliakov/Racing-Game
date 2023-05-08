@@ -70,7 +70,7 @@ void RendererOGL::beginDraw()
 	// shader->use();
 	Assets::getShader("Sprite").use();
 	shader->setMatrix4("viewProj", viewProj);
-	vertexArray->setActive();
+	//vertexArray->setActive();
 	
 }
 

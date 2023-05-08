@@ -6,7 +6,7 @@ VertexArray::VertexArray(const float* verticesP, unsigned int nbVerticesP, const
 {
 	// Create vertex array
 	glGenVertexArrays(1, &vertexArray);
-	glBindVertexArray(vertexArray);
+	glBindVertexArray(vertexArray); // je bind ici
 
 	// Create vertex buffer
 	glGenBuffers(1, &vertexBuffer);
@@ -34,7 +34,7 @@ VertexArray::~VertexArray()
 	glDeleteVertexArrays(1, &vertexArray);
 }
 
-void VertexArray::setActive()
+void VertexArray::setActive()  // pourquoi? l'array est déjà bind juste au dessus...
 {
-	glBindVertexArray(vertexArray);
+	glBindVertexArray(vertexArray); 
 }
