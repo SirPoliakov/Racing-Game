@@ -1,12 +1,18 @@
-#include "RendererOGL.h"
 #include <GL/glew.h>
-#include "Rectangle.h"
-#include "Vector2.h"
-#include "Log.h"
 #include <SDL_image.h>
-#include "Assets.h"
 
-RendererOGL::RendererOGL() : window(nullptr), vertexArray(nullptr), context(nullptr), shader(nullptr), viewProj(Matrix4::createSimpleViewProj(WINDOW_WIDTH,WINDOW_HEIGHT))
+#include "RendererOGL.h"
+#include "Assets.h"
+#include "Actor.h"
+#include "SpriteComponent.h"
+#include "Log.h"
+
+
+RendererOGL::RendererOGL() :
+	window{ nullptr },
+	context{ nullptr },
+	spriteVertexArray{ nullptr },
+	viewProj{ Matrix4::createSimpleViewProj(WINDOW_WIDTH, WINDOW_HEIGHT) }
 {
 }
 
@@ -27,12 +33,17 @@ bool RendererOGL::initialize(Window& windowP)
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+	// Depth buffering
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	// Enable double buffering
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	// Force OpenGL to use hardware acceleration
 	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
+	// OpenGL Context
 	context = SDL_GL_CreateContext(windowP.getSDLWindow());
+
+	// GLEW
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
 	{
@@ -49,60 +60,72 @@ bool RendererOGL::initialize(Window& windowP)
 		return false;
 	}
 
-	//Assets::loadShader("Res\\Shaders\\Basic.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
-	// Assets::loadShader("Res\\Shaders\\Transform.vert", "Res\\Shaders\\Basic.frag", "", "", "", "Basic");
-	Assets::loadShader("Res\\Shaders\\Sprite.vert", "Res\\Shaders\\Sprite.frag", "", "", "", "Sprite");
+	spriteVertexArray = new VertexArray(spriteVertices, 4, indices, 6);
+	return true;
+}
 
-	vertexArray = new VertexArray(vertices, 4, indices, 6);
-	shader = &Assets::getShader("Sprite");
-    return true;
+void RendererOGL::addSprite(SpriteComponent* sprite)
+{
+	// Insert the sprite at the right place in function of drawOrder
+	int spriteDrawOrder = sprite->getDrawOrder();
+	auto iter = begin(sprites);
+	for (; iter != end(sprites); ++iter)
+	{
+		if (spriteDrawOrder < (*iter)->getDrawOrder()) break;
+	}
+	sprites.insert(iter, sprite);
+}
+
+void RendererOGL::removeSprite(SpriteComponent* sprite)
+{
+	auto iter = std::find(begin(sprites), end(sprites), sprite);
+	sprites.erase(iter);
 }
 
 void RendererOGL::beginDraw()
 {
-	glClearColor(0.45f, 0.45f, 1.0f, 1.0f);
-	// Clear the color buffer
-	glClear(GL_COLOR_BUFFER_BIT);
-	// Enable alpha blending on the color buffer
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	// Active shader and vertex array
-	// shader->use();
-	Assets::getShader("Sprite").use();
-	shader->setMatrix4("viewProj", viewProj);
-	//vertexArray->setActive();
-	
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	// Clear the color and depth buffer
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-/* RendererOGL::loadConcreteText()
+void RendererOGL::draw()
 {
-
-}*/
-
-
- /*RendererOGL::loadCarText()
-{
-
-}*/
-
-
-/* RendererOGL::loadTreeText()
-{
-
-}*/
-
-/*void RendererOGL::draw()
-{
+	//Draw() into drawSprites() into drawSprites(): Pourra ulterieurement appeler d'autres assets a draw comme des meshes ici en plus des sprites
 	drawSprites();
-}*/
+}
 
-void RendererOGL::drawSprite(const Matrix4 wrldTrans, const Texture& tex, Vector2 origin) const
+void RendererOGL::drawSprites()
 {
-	Matrix4 scaleMat = Matrix4::createScale((float)tex.getWidth(), (float)tex.getHeight(), 1.0f);
-	Matrix4 world = scaleMat * wrldTrans;
-	Matrix4 pixelTranslation = Matrix4::createTranslation(Vector3(-WINDOW_WIDTH / 2 - origin.x, -WINDOW_HEIGHT / 2 - origin.y, 0.0f)); // Screen pixel coordinates
-	shader->setMatrix4("uWorldTransform", world * pixelTranslation);
+	glDisable(GL_DEPTH_TEST);
+	// Enable alpha blending on the color buffer
+	glEnable(GL_BLEND);
+	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+
+	// Active shader and vertex array
+	Shader& spriteShader = Assets::getShader("Sprite");
+	spriteShader.use();
+	spriteShader.setMatrix4("uViewProj", viewProj);
+	spriteVertexArray->setActive();
+
+	for (auto sprite : sprites)
+	{
+		if (sprite->getVisible())
+		{
+			sprite->draw(*this); 
+		}
+	}
+}
+
+void RendererOGL::drawSprite(const class Actor& actor, const Texture& tex, Flip flip) const
+{
 	tex.setActive();
+	Assets::getShader("Sprite").setInteger("uTexture", 0);
+	Matrix4 world = actor.getWorldTransform();
+	Assets::getShader("Sprite").setMatrix4("uWorldTransform", world);
+	
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 
@@ -113,6 +136,6 @@ void RendererOGL::endDraw()
 
 void RendererOGL::close()
 {
+	delete spriteVertexArray;
 	SDL_GL_DeleteContext(context);
-	delete vertexArray;
 }

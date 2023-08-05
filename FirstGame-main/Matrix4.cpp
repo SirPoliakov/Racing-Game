@@ -12,9 +12,9 @@ const Matrix4 Matrix4::identity(m4Ident);
 
 void Matrix4::invert()
 {
-	float tmp[12] = { 0 };
-	float src[16] = { 0 };
-	float dst[16] = { 0 };
+	float tmp[12];
+	float src[16];
+	float dst[16];
 	float det;
 
 	// Transpose matrix

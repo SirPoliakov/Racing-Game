@@ -1,21 +1,24 @@
 #pragma once
-#include "Vector2.h"
+#include "Actor.h"
 #include "RendererOGL.h"
-#include "Rectangle.h"
-#include "Matrix4.h"
-#include "Vector3.h"
 
+enum Key {
+	Z,
+	Q,
+	S,
+	D,
+};
 
-class Car
+class Car : public Actor
 {
 public:
-	Car(Vector2 p, float v, Vector2 carS) : pos(p), velocity(v), carScale(carS), carAng(-90){}
-	Car() : pos({ 60,300 }), velocity(0), carScale({ 0,0}), carAng(-90){}
-	~Car() {}
+	Car(Vector2 scale, float v) : velocity(v), Actor(scale) {};
+	Car() : velocity(0), Actor() {};
+	Car(const Car&) = delete;
+	Car& operator=(const Car&) = delete;
+	~Car() {};
 
-	void draw(RendererOGL* rend, Texture* myText, const Matrix4 wtMat); 
-
-	void update(float nextX, float nextY);
+	void update(float dt) ;
 
 	void driveForward();
 
@@ -23,30 +26,27 @@ public:
 
 	void brake();
 
-	Vector2 getPos();
-	
 	float getVelo();
 
-	Vector2 getCarScale();
+	void turnRight();
 
-	float getCarAng();
+	void turnLeft();
 
-	void turnRight(float rot);
+	void setVelocity(float _v);
 
-	void turnLeft(float rot);
-	
-	void setV(float v);
-	
-	void setP(Vector2 p);
+	void processInput(Key _k);
 
-	void setCarAng(float a);
-	
-	void setCarScale(Vector2 carS);
+	int trackTileToIndex(int col, int row);
+
+	bool checkForTrackAtPixelCoord(int pixelX, int pixelY);
+
+	float convertSpaceCoordWidth(int _Coord);
+
+	float convertSpaceCoordHeight(int _Coord);
+
+	// Car Carac :
+	const float V_MAX = 50.0f;
 
 private:
-
-	Vector2 pos;
 	float velocity;
-	Vector2 carScale;
-	float carAng;
 };

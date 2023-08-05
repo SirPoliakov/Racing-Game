@@ -1,9 +1,10 @@
 #pragma once
 #include <SDL.h>
-#include <SDL_ttf.h>
 
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
+
+const int WINDOW_WIDTH = 1605;
+const int WINDOW_HEIGHT = 750;
+
 
 class Window
 {
@@ -24,4 +25,3 @@ private:
 	int width;
 	int height;
 };
-

@@ -1,6 +1,6 @@
 #pragma once
-#include "Window.h"
-#include "Vector2.h"
+#include "Window.hpp"
+#include "Vector2.hpp"
 
 class IRenderer
 {
@@ -18,12 +18,10 @@ public:
 
 	virtual bool initialize(Window& window) = 0;
 	virtual void beginDraw() = 0;
-	//virtual void draw() = 0;
+	virtual void draw() = 0;
 	virtual void endDraw() = 0;
 	virtual void close() = 0;
 	virtual IRenderer::Type type() = 0;
 
-	virtual void drawSprite(const class Actor&, const class Texture& tex, Flip flip) const = 0;
+	virtual void drawSprite(const class Actor& actor, const class Texture& tex, Flip flip) const = 0;
 };
-
-

@@ -1,10 +1,9 @@
-#include "Game.h"
+﻿#include "Game.h"
+#include "Actor.h"
+#include "Assets.h"
 #include "Timer.h"
-#include <random>
-#include <Math.h>
 
-#include <iostream>
-using namespace std;
+
 
 
 bool Game::initialize()
@@ -12,77 +11,59 @@ bool Game::initialize()
 	bool isWindowInit = window.initialize();
 	bool isRendererInit = myRenderer.initialize(window);
 
-	int windowWidth = window.getWidth();
-	int windowHeight = window.getHeight();
-	
-
-
-
-
-	Track tmpB({ 0, 0 }, TRACK_W, TRACK_H);
-	for (int i = 0; i < TRACK_ROWS; i++)
-	{
-		for (int j = 0; j < TRACK_COLS; j++)
-		{
-			tracks.push_back(tmpB);
-			tmpB.pos.x += TRACK_W;
-		}
-		tmpB.pos.x = 0;
-		tmpB.pos.y += TRACK_H;
-
-	}
-
-	for (int i = 0; i < TRACK_ROWS * TRACK_COLS; i++)
-	{
-		if (trackGrid[i] == 2)
-		{
-			tileRow = floor((float)i / TRACK_COLS);
-			tileCol = (float) (i % TRACK_COLS);
-			BEGIN_POS = {tileCol*40,tileRow*40};
-			break;
-		}
-		
-	}
-	myCar = Car(BEGIN_POS, 0.0f, { 25, 13 });
-
-	
-	
-
 	return isWindowInit && isRendererInit; // Return bool && bool && bool ...to detect error
 }
 
 void Game::load()
 {
-	// loading assets textures
+	// SHADERS ==============================
+	Assets::loadShader("Rsc\\Shaders\\Sprite.vert", "Rsc\\Shaders\\Sprite.frag", "", "", "", "Sprite");
 
-	Assets::loadTexture(myRenderer, "rsc/Car.bmp", "Car");
-	Assets::loadTexture(myRenderer, "rsc/Concrete.bmp", "Concrete");
-	Assets::loadTexture(myRenderer, "rsc/Tree.bmp", "Tree");
+	// TEXTURES =============================
+	Assets::loadTexture(myRenderer, "Rsc\\Textures\\Tree.bmp", "Tree");
+	Assets::loadTexture(myRenderer, "Rsc\\Textures\\concrete.bmp", "Concrete");
+	Assets::loadTexture(myRenderer, "Rsc\\Textures\\Car.bmp", "Car");
 
+	// ACTORS QUEUE LOADING =================
 
-	CAR_TEXT = &Assets::getTexture("Car");
-	CONCRETE_TEXT = &Assets::getTexture("Concrete");
-	TREE_TEXT = &Assets::getTexture("Tree");
-}
+	Vector3 vec3 = Vector3::zero;
+	vec3.x = -WINDOW_WIDTH / 2 + 50;
+	vec3.y = WINDOW_HEIGHT / 2 - 50;
+	Actor* tmpActor;
+	int k = 0; int kmax = TRACK_COLS * TRACK_ROWS;
 
-int Game::trackTileToIndex(int col, int row)
-{
-	return (col + TRACK_COLS * row);
-}
+	for (int i = 0; i < TRACK_ROWS; i++)
+	{
+		for (int j = 0; j < TRACK_COLS; j++)
+		{
+			tmpActor = new Actor(Vector2(TRACK_W, TRACK_H), vec3);
+			if (trackGrid[k] == 1) new SpriteComponent(actors.back(), Assets::getTexture("Tree"), 1);
+			else if (trackGrid[k] == 0 || trackGrid[k] == 2)
+			{
+				new SpriteComponent(actors.back(), Assets::getTexture("Concrete"), 1);
+				if (trackGrid[k] == 2) { BEGIN_POS.x = vec3.x; BEGIN_POS.y = vec3.y; }
+			}
 
-bool Game::checkForTrackAtPixelCoord(int pixelX, int pixelY) {
-	float tileCol = (float)pixelX / TRACK_W;
-	float tileRow = (float)pixelY / TRACK_H;
-	// we'll use Math.floor to round down to the nearest whole number
-	tileCol = floor(tileCol);
-	tileRow = floor(tileRow);
-	// first check whether the car is within any part of the track wall
-	if (tileCol < 0 || tileCol >= TRACK_COLS ||
-		tileRow < 0 || tileRow >= TRACK_ROWS) {
-		return false; // bail out of function to avoid illegal array position usage
+			std::cout << "Tile position :  (" << tmpActor->getPosition().x << "; " << tmpActor->getPosition().y << ") ;" << std::endl;
+
+			vec3.x += TRACK_W;
+
+			if (k < kmax - 1) k++;
+		}
+
+		tmpActor = new Actor(Vector2(TRACK_W, TRACK_H), vec3);
+		if (trackGrid[k] == 1) new SpriteComponent(actors.back(), Assets::getTexture("Tree"), 1);
+		if (trackGrid[k] == 0 || trackGrid[k] == 2) new SpriteComponent(actors.back(), Assets::getTexture("Concrete"), 1);
+		vec3.x = -WINDOW_WIDTH / 2 + 50;
+		vec3.y -= TRACK_H;
+
 	}
-	int trackIndex = trackTileToIndex((int)tileCol, (int)tileRow);
-	return (trackGrid[trackIndex] == 0);
+
+	myCar = new Car(CAR_DIMENSIONS, 0);
+	vec3 = Vector3::zero; vec3.x = BEGIN_POS.x; vec3.y = BEGIN_POS.y;
+	myCar->setPosition(vec3); myCar->setRotation(M_PI / 2);
+
+	new SpriteComponent(actors.back(), Assets::getTexture("Car"), 1);
 }
 
 void Game::processInput()
@@ -109,112 +90,93 @@ void Game::processInput()
 	}
 
 	// Car launch
-	if (keyboardState[SDL_SCANCODE_UP])
+	if (keyboardState[SDL_SCANCODE_W])
 	{
-		myCar.driveForward();
-	}else if(myCar.getVelo() > 0)
+		myCar->processInput(Z);
+
+	}
+	else if (myCar->getVelo() > 0)
 	{
-		myCar.slowDown(0.5);
+		myCar->slowDown(0.5);
 	}
 
-	// Car drive
-	float velo = myCar.getVelo();
-	if (velo > 50) velo = 50;
-	float rot = 3*velo / 50;
-	if (velo < 25) rot = 0;
+	if (keyboardState[SDL_SCANCODE_A])
+	{
+		myCar->processInput(Q);
+	}
+	if (keyboardState[SDL_SCANCODE_D])
+	{
+		myCar->processInput(D);
+	}
 
-	if (keyboardState[SDL_SCANCODE_LEFT])
+	if (keyboardState[SDL_SCANCODE_S])
 	{
-		myCar.turnLeft(rot);
-	}
-	if (keyboardState[SDL_SCANCODE_RIGHT])
-	{
-		myCar.turnRight(rot);
-	}
-	
-	if (keyboardState[SDL_SCANCODE_DOWN])
-	{
-		myCar.brake();
+		myCar->processInput(S);
 	}
 
 	// Car reset
 	if (keyboardState[SDL_SCANCODE_SPACE])
 	{
-		myCar.setP(BEGIN_POS);
-		myCar.setV(0);
-		myCar.setCarAng(-90);
+		Vector3 vec3 = Vector3::zero; vec3.x = BEGIN_POS.x; vec3.y = BEGIN_POS.y;
+		myCar->setPosition(vec3);
+		myCar->setVelocity(0);
+		myCar->setRotation(1.0);
+	}
+
+	// Escape: quit game
+	if (keyboardState[SDL_SCANCODE_ESCAPE])
+	{
+		isRunning = false;
 	}
 }
 
 void Game::update(float dt)
 {
-	
+	//v =============================================================╗
+	//v Common actor management                                      ║
 
-	// Car move
-	double nextCarX = myCar.getPos().x + cos(myCar.getCarAng() * M_PI / 180) * myCar.getVelo()*dt;
-	double nextCarY = myCar.getPos().y + sin(myCar.getCarAng()* M_PI / 180) * myCar.getVelo()*dt;
-
-	int nextCX = (int) floor(nextCarX);
-	int nextCY = (int) floor(nextCarY);
-
-	if (checkForTrackAtPixelCoord(nextCX, nextCY))
+	// Update actors 
+	isUpdatingActors = true;
+	for (auto actor : actors)
 	{
-		myCar.update((float)nextCarX, (float)nextCarY);
+		actor->update(dt);
 	}
-	else
+	isUpdatingActors = false;
+
+	// Move pending actors to actors
+	for (auto pendingActor : pendingActors)
 	{
-		myCar.setV(0);
+		pendingActor->computeWorldTransform();
+		actors.emplace_back(pendingActor);
+	}
+	pendingActors.clear();
+
+	// Delete dead actors
+	std::vector<Actor*> deadActors;
+	for (auto actor : actors)
+	{
+		if (actor->getState() == Actor::ActorState::Dead)
+		{
+			deadActors.emplace_back(actor);
+		}
+	}
+	for (auto deadActor : deadActors)
+	{
+		delete deadActor;
 	}
 
-	computeCarWorldTransform();
-
-
+	//^ Common actor management                                      ║
+	//^ =============================================================╝
 
 }
-
-void Game::computeCarWorldTransform()
-{
-	if (mustRecomputeCarWorldTransform == true)
-	{
-		mustRecomputeCarWorldTransform = false;
-		const Vector3 scale(myCar.getCarScale().x, myCar.getCarScale().y, 0.0f);
-		carWorldTransform = Matrix4::createScale(scale);
-		carWorldTransform *= Matrix4::createRotationZ(myCar.getCarAng());
-		carWorldTransform *= Matrix4::createTranslation(Vector3(myCar.getPos().x, myCar.getPos().y, 0.0f));
-	}
-}
-
-void Game::computeStaticWorldTransform(Vector2& coord)
-{
-	const Vector3 scale(TRACK_H, TRACK_W, 0.0f);
-	staticWorldTransform = Matrix4::createScale(scale);
-	staticWorldTransform *= Matrix4::createTranslation(Vector3(coord.x, coord.y, 0.0f));
-}
-
 
 void Game::render()
 {
 	myRenderer.beginDraw();
-
-	for (int i = 0; i < TRACK_ROWS * TRACK_COLS; i++)
-	{
-		float posX = tracks[i].pos.x; float posY = tracks[i].pos.y; Vector2 vecXY = { posX, posY }; Vector2 ori = { (float)(CONCRETE_TEXT->getWidth()) / 2,(float)(CONCRETE_TEXT->getHeight()) / 2 };
-		//Rectangle rect = { posX, posY, (float)tracks[i].width /* - TRACK_GAP */, (float)tracks[i].height /* - TRACK_GAP */};
-		computeStaticWorldTransform(vecXY);
-		if (trackGrid[i] == 0 || trackGrid[i] == 2)
-		{
-			myRenderer.drawSprite(staticWorldTransform, Assets::getTexture("Concrete"), ori);
-		}
-		else
-		{
-			myRenderer.drawSprite(staticWorldTransform, Assets::getTexture("Tree"), ori);
-		}
-	}
-	
-	myCar.draw(&myRenderer, CAR_TEXT, carWorldTransform);
-
+	myRenderer.draw();
 	myRenderer.endDraw();
 }
+
 
 void Game::loop()
 {
@@ -223,7 +185,6 @@ void Game::loop()
 	while (isRunning)
 	{
 		float dt = timer.computeDeltaTime() / 1000.0f;
-		//cout << "dt = " << dt << endl;
 		processInput();
 		update(dt);
 		render();
@@ -231,9 +192,52 @@ void Game::loop()
 	}
 }
 
+void Game::unload()
+{
+	// Delete actors
+	// Because ~Actor calls RemoveActor, have to use a different style loop
+	while (!actors.empty())
+	{
+		delete actors.back();
+	}
+
+	// Resources
+	Assets::clear();
+}
+
 void Game::close()
 {
 	myRenderer.close();
 	window.close();
 	SDL_Quit();
+}
+
+void Game::addActor(Actor* actor)
+{
+	if (isUpdatingActors)
+	{
+		pendingActors.emplace_back(actor);
+	}
+	else
+	{
+		actors.emplace_back(actor);
+	}
+}
+
+void Game::removeActor(Actor* actor)
+{
+	// Erase actor from the two vectors
+	auto iter = std::find(begin(pendingActors), end(pendingActors), actor);
+	if (iter != end(pendingActors))
+	{
+		// Swap to end of vector and pop off (avoid erase copies)
+		std::iter_swap(iter, end(pendingActors) - 1);
+		pendingActors.pop_back();
+	}
+	iter = std::find(begin(actors), end(actors), actor);
+	if (iter != end(actors))
+	{
+		std::iter_swap(iter, end(actors) - 1);
+		actors.pop_back();
+	}
 }

@@ -1,12 +1,18 @@
 #pragma once
-#include <utility>
-#include "Window.h"
-#include "IRenderer.h"
-#include "RendererOGL.h"
-#include "Vector2.h"
-#include "Car.h"
-#include "Assets.h"
 #include <vector>
+#include "Actor.h"
+#include "SpriteComponent.h"
+#include "Window.h"
+#include "Vector3.h"
+#include "RendererOGL.h"
+#include "Car.h"
+
+const int TRACK_W = 50;
+const int TRACK_H = 50;
+const int TRACK_COLS = 30;
+const int TRACK_ROWS = 15;
+
+using std::vector;
 
 struct Track {
 
@@ -27,7 +33,6 @@ struct Track {
 	bool hit = false;
 };
 
-
 class Game
 {
 public:
@@ -43,73 +48,60 @@ public:
 	Game& operator=(Game&&) = delete;
 
 private:
-	Game(): isRunning(true), mustRecomputeCarWorldTransform(true), tileCol(0),tileRow(0) {}
+	Game() : isRunning(true), isUpdatingActors(false) {}
 
 public:
-
-	int TRACK_W = 40;
-	int TRACK_H = 40;
-	int TRACK_GAP = 1;
-	const int TRACK_COLS = 20;
-	const int TRACK_ROWS = 15;
-
-	Texture* CONCRETE_TEXT = 0;
-	Texture* CAR_TEXT = 0;
-	Texture* TREE_TEXT = 0;
-	Car myCar;
-	
-
-	float tileRow, tileCol;
-
-	Vector2 BEGIN_POS;
-
-	
-	std::vector<Track> tracks;
-
-	std::vector<int> trackGrid {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-								1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-								1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-								1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
-								1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1,
-								1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1,
-								1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
-								1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
-								1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-								1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-								1, 0, 2, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-					   			1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
-								1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1,
-								1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1,
-								1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-
-	
-
-	
-
-	Matrix4 carWorldTransform;
-	Matrix4 staticWorldTransform;
-	bool mustRecomputeCarWorldTransform;
-
 	bool initialize();
 	void load();
 	void loop();
+	void unload();
 	void close();
-	void processInput();
-	int trackTileToIndex(int col, int row);
-	bool checkForTrackAtPixelCoord(int pixelX, int pixelY);
 
-	void computeCarWorldTransform();
-	void computeStaticWorldTransform(Vector2& coord);
-
+	void addActor(Actor* actor);
+	void removeActor(Actor* actor);
 	RendererOGL& getRenderer() { return myRenderer; }
 
+
+	//v Game specifics ===============================================
+
+
+	Vector2 BEGIN_POS;
+	const Vector2 CAR_DIMENSIONS = Vector2(37, 19);
+
+	std::vector<Track> tracks;
+
+	std::vector<int> trackGrid{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //29
+		/*30*/	1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		/*60*/	1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 ,0, 0, 1, 1,
+		/*90*/  1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1,
+		/*120*/	1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1,
+		/*150*/	1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1,
+		/*180*/	1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1,
+		/*210*/  1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1,
+				 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1,
+				 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0 ,0, 1,
+				 1, 0, 2, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1,
+				 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
+				 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1,
+				 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1,
+				 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+
+	Car* myCar = nullptr;
+
+	//^ Game specifics ===============================================
+
 private:
+	void processInput();
 	void update(float dt);
 	void render();
 
 	bool isRunning;
+
 	Window window;
 	RendererOGL myRenderer;
 
-};
+	bool isUpdatingActors;
+	vector<Actor*> actors;
+	vector<Actor*> pendingActors;
 
+};

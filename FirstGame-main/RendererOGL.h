@@ -1,13 +1,11 @@
 #pragma once
 #include "IRenderer.h"
 #include "VertexArray.h"
-#include "Vector2.h"
+#include "Vector3.h"
 #include "Matrix4.h"
 #include "Shader.h"
-#include "Texture.h"
-#include "Rectangle.h"
-
 #include <vector>
+
 
 class RendererOGL : public IRenderer
 {
@@ -19,20 +17,25 @@ public:
 
 	bool initialize(Window& window);
 	void beginDraw();
-	void drawSprite(const Matrix4 wrldTrans, const Texture& tex, Vector2 origin) const;
+	void draw();
 	void endDraw();
-
 	void close();
 	IRenderer::Type type() { return Type::OGL; }
-	
+
+	std::vector<class SpriteComponent*> getSprites() { return sprites; }
+	void addSprite(class SpriteComponent* sprite);
+	void removeSprite(class SpriteComponent* sprite);
+	void drawSprite(const class Actor& actor, const class Texture& tex, Flip flip) const;
 
 private:
+	
+	void drawSprites();
 
-	Shader* shader;
 	Window* window;
-	VertexArray* vertexArray;
 	SDL_GLContext context;
+	VertexArray* spriteVertexArray;
 	Matrix4 viewProj;
 
-};
+	std::vector<class SpriteComponent*> sprites;
 
+};

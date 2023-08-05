@@ -75,7 +75,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Ben\Documents\Prog\SDL\SDL2-2.0.12\include;C:\Users\Ben\Documents\Prog\SDL\SDL2_ttf-2.0.15\include;C:\Users\Ben\Documents\Prog\SDL\SDL2_mixer-2.0.4\include;C:\Users\Ben\Documents\Prog\SDL\SDL2_image-2.0.5\include;C:\Users\Ben\Documents\Prog\SDL\rapidjson\include\rapidjson;C:\Users\Ben\Documents\Prog\SDL\glew-2.1.0\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Ben\Documents\Prog\SDL\SDL2-2.0.12\include;C:\Users\Ben\Documents\Prog\SDL\SDL2_ttf-2.0.15\include;C:\Users\Ben\Documents\Prog\SDL\SDL2_mixer-2.0.4\include;C:\Users\Ben\Documents\Prog\SDL\SDL2_image-2.0.5\include;C:\Users\Ben\Documents\Prog\SDL\rapidjson\include;C:\Users\Ben\Documents\Prog\SDL\glew-2.1.0\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Ben\Documents\Prog\SDL\SDL2-2.0.12\lib\x64;C:\Users\Ben\Documents\Prog\SDL\SDL2_ttf-2.0.15\lib\x64;C:\Users\Ben\Documents\Prog\SDL\SDL2_mixer-2.0.4\lib\x64;C:\Users\Ben\Documents\Prog\SDL\SDL2_image-2.0.5\lib\x64;C:\Users\Ben\Documents\Prog\SDL\glew-2.1.0\lib\Release\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,8 +142,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Assets.cpp" />
     <ClCompile Include="Car.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -151,6 +153,7 @@
     <ClCompile Include="RendererSDL.cpp" />
     <ClCompile Include="RendererOGL.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -159,17 +162,20 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="Assets.h" />
     <ClInclude Include="Car.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Maths.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Rectangle.h" />
-    <ClInclude Include="RendererSDL.h" />
     <ClInclude Include="RendererOGL.h" />
+    <ClInclude Include="RendererSDL.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Vector2.h" />

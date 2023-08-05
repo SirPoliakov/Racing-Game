@@ -8,7 +8,7 @@ public:
 	float y;
 	float z;
 
-	Vector3(): x(0.0f), y(0.0f), z(0.0f) {}
+	Vector3() : x(0.0f), y(0.0f), z(0.0f) {}
 
 	explicit Vector3(float xP, float yP, float zP)
 		:x(xP), y(yP), z(zP) {}
@@ -80,6 +80,17 @@ public:
 		return *this;
 	}
 
+	// Vector ==
+	bool operator==(const Vector3& right) {
+		if (x == right.x &&
+			y == right.y &&
+			z == right.z) {
+
+			return true;
+		}
+		return false;
+	}
+
 	// Normalize the provided vector
 	static Vector3 normalize(const Vector3& vec)
 	{
@@ -116,6 +127,14 @@ public:
 		return v - 2.0f * Vector3::dot(v, n) * n;
 	}
 
+	static Vector3 transform(const Vector3& vec, const class Matrix4& mat, float w = 1.0f);
+
+	// This will transform the vector and renormalize the w component
+	static Vector3 transformWithPerspDiv(const Vector3& vec, const class Matrix4& mat, float w = 1.0f);
+
+	// Transform a Vector3 by a quaternion
+	static Vector3 transform(const Vector3& v, const class Quaternion& q);
+
 	static const Vector3 zero;
 	static const Vector3 unitX;
 	static const Vector3 unitY;
@@ -126,4 +145,3 @@ public:
 	static const Vector3 infinity;
 	static const Vector3 negInfinity;
 };
-

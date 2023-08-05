@@ -1,22 +1,60 @@
 #include "Car.h"
 #include "Math.h"
-#include "Texture.h"
+#include "Game.h"
+#include <iostream>
 
-void Car::draw(RendererOGL* rend, Texture* myText, const Matrix4 wtMat)
+
+float Car::convertSpaceCoordWidth(int _Coord)
 {
-	Rectangle srcRect = { pos.x - carScale.x/2, pos.y - carScale.y/2, carScale.x, carScale.y };
-	rend->drawSprite(wtMat, *myText, Vector2{ pos.x , pos.y });
+	if (_Coord < 0.0f)
+	{
+		return WINDOW_WIDTH / 2 - abs(_Coord);
+	}
+	else {
+		return WINDOW_WIDTH / 2 + _Coord;
+	}
 }
 
-void Car::update(float nextX, float nextY)
+float Car::convertSpaceCoordHeight(int _Coord)
 {
-	pos.x = nextX;
-	pos.y = nextY;
+	if (_Coord < 0.0f)
+	{
+		return WINDOW_HEIGHT/ 2 + abs(_Coord);
+	}
+	else {
+		return WINDOW_HEIGHT / 2 - _Coord;
+	}
+}
+
+
+  void Car::update (float dt) 
+{
+	float nextCarX = position.x + cos(rotation) * velocity * dt;
+	float nextCarY = position.y + sin(rotation) * velocity * dt;
+	
+	int nextCX = (int)floor(nextCarX);
+	int nextCY = (int)floor(nextCarY);
+
+	std::cout << "checkForTrackAtPixelCoord(" << nextCX << "," << nextCY << ") ;" << std::endl;
+
+	if (checkForTrackAtPixelCoord(nextCX, nextCY))
+	{
+		setPosition(Vector3(nextCarX, nextCarY, 0.0f));
+	}
+	else
+	{
+
+		setVelocity(0.0f);
+	}
+
+	computeWorldTransform();
 }
 
 void Car::driveForward()
 {
 	velocity += 6;
+
+	std::cout << "Velocity : " << velocity << std::endl;
 }
 
 void Car::slowDown(float v)
@@ -30,51 +68,69 @@ void Car::brake()
 	else if (velocity > -20) velocity -= 2;
 }
 
-Vector2 Car::getPos()
-{
-	return pos;
-}
-
 float Car::getVelo()
 {
 	return velocity;
 }
 
-Vector2 Car::getCarScale()
+void Car::turnRight()
 {
-	return carScale;
+	rotate(-0.1f);
+}
+void Car::turnLeft()
+{
+	rotate(0.1f);
 }
 
-float Car::getCarAng()
+void Car::setVelocity(float _v)
 {
-	return carAng;
+	velocity = _v;
 }
 
-void Car::turnRight(float rot)
+int Car::trackTileToIndex(int col, int row)
 {
-	carAng += rot;
-}
-void Car::turnLeft(float rot)
-{
-	carAng -= rot;
+	return (col + TRACK_COLS * row);
 }
 
-void Car::setV(float v)
-{
-	velocity = v;
+bool Car::checkForTrackAtPixelCoord(int pixelX, int pixelY) {
+
+	float tileCol = convertSpaceCoordWidth(pixelX); tileCol -= 30.0f; 
+	float tileRow = convertSpaceCoordHeight(pixelY); tileRow -= 30.0f;
+
+	tileCol /= TRACK_W;
+	tileRow /= TRACK_H;
+
+
+	// we'll use Math.floor to round down to the nearest whole number
+	tileCol = floor(tileCol);
+	tileRow = floor(tileRow);
+	// first check whether the car is within any part of the track wall
+	if (tileCol < 0 || tileCol >= TRACK_COLS || tileRow < 0 || tileRow >= TRACK_ROWS) {
+		return false; // bail out of function to avoid illegal array position usage
+	}
+	int trackIndex = trackTileToIndex((int)tileCol, (int)tileRow);	
+	int val = Game::instance().trackGrid[trackIndex];
+	std::cout << "track index : " << trackIndex << std::endl;
+	std::cout << " val : " << val << std::endl;
+	bool tamere = ( val == 0 || val == 2);
+	return tamere;
 }
 
-void Car::setP(Vector2 p)
+void Car::processInput(Key _k)
 {
-	pos = p;
-}
-
-void Car::setCarScale(Vector2 carS)
-{
-	carScale = carS;
-}
-
-void Car::setCarAng(float a)
-{
-	carAng = a;
+	switch (_k)
+	{
+	case Z:
+		driveForward();
+		break;
+	case Q:
+		turnLeft();
+		break;
+	case S:
+		brake();
+		break;
+	case D:
+		turnRight();
+		break;
+	};
 }

@@ -3,6 +3,8 @@
 #include <sstream>
 #include <fstream>
 #include "Log.h"
+#include "RendererOGL.h"
+#include  <rapidjson/rapidjson.h>
 
 std::map<std::string, Texture> Assets::textures;
 std::map<std::string, Shader> Assets::shaders;
@@ -41,7 +43,7 @@ Shader& Assets::getShader(const std::string& name)
     return shaders[name];
 }
 
-void Assets::clear() 
+void Assets::clear()
 {
     // (Properly) delete all textures
     for (auto iter : textures)
@@ -56,7 +58,8 @@ void Assets::clear()
 Texture Assets::loadTextureFromFile(IRenderer& renderer, const string& filename)
 {
     Texture texture;
-    texture.loadOGL(filename);
+  
+    texture.loadOGL(dynamic_cast<RendererOGL&>(renderer), filename);
 
     return texture;
 }
@@ -133,3 +136,4 @@ Shader Assets::loadShaderFromFile(const std::string& vShaderFile, const std::str
         gShaderFile != "" ? gShaderCode : nullptr);
     return shader;
 }
+
